@@ -92,13 +92,9 @@ mod templates {
 
     lazy_static! {
         pub static ref PAGE: String = {
-            let tera = match Tera::new("src/templates/*.html") {
-                Ok(t) => t,
-                Err(e) => {
-                    println!("Parsing error(s): {}", e);
-                    ::std::process::exit(1);
-                }
-            };
+            let mut tera = Tera::default();
+            tera.add_raw_template("index.html", include_str!("templates/index.html"))
+                .unwrap();
             let mut context = Context::new();
             context.insert("members", &get_webring());
             tera.render("index.html", &context).unwrap()
